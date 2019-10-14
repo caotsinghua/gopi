@@ -1,12 +1,17 @@
 package main
 
 import (
+	"ch2/conv"
+	"ch2/popcount"
 	"fmt"
 )
 
 func main() {
-	testNew()
-	testAssign()
+	// testNew()
+	// testAssign()
+	// testConv()
+	fmt.Println(popcount.PopCount(12))
+
 }
 
 func testNew() {
@@ -30,4 +35,9 @@ func gcd(x, y int) int {
 		x, y = y, x%y
 	}
 	return x
+}
+
+func testConv() {
+	c := conv.FToC(conv.Fahrenheit(234))
+	fmt.Println(c)
 }
