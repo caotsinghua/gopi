@@ -2,7 +2,9 @@ package main
 
 import (
 	"crypto/sha256"
+	"crypto/sha512"
 	"fmt"
+	"os"
 )
 
 func main() {
@@ -11,8 +13,11 @@ func main() {
 	// t3()
 	// t4()
 	// t5()
-	t6()
-
+	// t6()
+	// t7()
+	// ===
+	// p1()
+	p2()
 }
 
 func t1() {
@@ -64,4 +69,50 @@ func t6() {
 	c2 := sha256.Sum256([]byte{'x', 'y'})
 	fmt.Printf("%x\n%x\n%t\n%T\n", c1, c2, c1 == c2, c1)
 	fmt.Println(c1)
+}
+
+func zero(a *[32]byte) {
+	for index := range a {
+		a[index] = 0
+	}
+}
+
+func zero2(ptr *[32]byte) {
+	*ptr = [32]byte{}
+}
+
+func t7() {
+	var ptr [32]byte = [32]byte{1, 2, 3}
+	fmt.Println(ptr)
+	zero2(&ptr)
+	fmt.Println(ptr)
+}
+
+func p1() {
+	var a []byte = []byte("x")
+	var b []byte = []byte("X")
+	a1 := sha256.Sum256(a)
+	b1 := sha256.Sum256(b)
+	count := 0
+	for i, _ := range a1 {
+		if a1[i] != b1[i] {
+			count++
+		}
+	}
+	fmt.Println(a1)
+	fmt.Println(b1, count)
+}
+
+func p2() {
+	num, useType := os.Args[1], os.Args[2]
+	switch useType {
+	case "sha256":
+		{
+			fmt.Fprintf(os.Stdout, "%v", sha256.Sum256([]byte(num)))
+		}
+	case "sha384":
+		{
+			fmt.Fprintf(os.Stdout, "%v", sha512.New384())
+		}
+	}
 }
