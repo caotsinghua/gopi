@@ -7,12 +7,17 @@ import (
 	"jsonmod/movie"
 	templatePackage "jsonmod/template"
 	"log"
+	"net/http"
 	"os"
+	"strings"
 )
 
 func main() {
 	// t1()
-	testGithub()
+	// testGithub()
+	// templatePackage.TestAutoEscape()
+	// network()
+	testadd1()
 }
 
 func t1() {
@@ -50,5 +55,42 @@ func testGithub() {
 	// for _, item := range result.Items {
 	// 	fmt.Printf("#%-5d %9.9s %.55s\n", item.Number, item.User.Login, item.Title)
 	// }
-	templatePackage.TTemp1(*result)
+	// templatePackage.TTemp1(*result)
+	templatePackage.ParseHtml(*result)
+}
+
+func network() {
+	http.HandleFunc("/github-search", githubSearchHandler)
+	fmt.Println("run on 1234")
+	err := http.ListenAndServe(":1234", nil)
+	if err != nil {
+		log.Fatal("listen and serve:", err)
+	}
+
+}
+func githubSearchHandler(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		log.Println(err)
+	}
+	q := r.Form["q"]
+	result, err := github.SearchIssues(q)
+	if err != nil {
+		log.Fatal(err)
+	}
+	templatePackage.ParseHtmlToSereve(*result, w)
+}
+
+func add1(r rune) rune {
+	return r + 1
+}
+
+func testadd1() {
+	fmt.Println(strings.Map(add1, "HAL-9000"))
+	fmt.Println(strings.Map(add1, "VMS"))
+	fmt.Printf("%*s </%s>\n", 2, "a", "div")
+	var f = func() {
+		fmt.Println("ff")
+	}
+
+	f()
 }
